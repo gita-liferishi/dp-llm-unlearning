@@ -7,7 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/17___WPwPVTLNe-Opwai4fwfa7v3lmAXn
 """
 
-pip install transformers datasets torch peft
+#pip install transformers datasets torch peft
 
 import torch
 import torch.nn as nn
@@ -28,6 +28,7 @@ from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 from peft import get_peft_model, LoraConfig, TaskType
 from sklearn.model_selection import KFold
+from sklearn.metrics import f1_score, confusion_matrix
 
 splits = {'train': 'yelp_review_full/train-00000-of-00001.parquet', 'test': 'yelp_review_full/test-00000-of-00001.parquet'}
 df = pd.read_parquet("hf://datasets/Yelp/yelp_review_full/" + splits["train"])
@@ -36,7 +37,7 @@ df.head()
 df.isnull().sum()
 
 df.dropna(inplace=True)
-df = df.iloc[:100001,:]
+df = df.iloc[:300001,:]
 df.shape
 
 """# Data Prep"""
@@ -120,7 +121,7 @@ from sklearn.model_selection import train_test_split
 
 # Split data (80% train, 20% test)
 X_train, X_test, y_train, y_test = train_test_split(
-    df['text'], df['label'], test_size=0.2, random_state=42
+    df['text'], df['label'], test_size=0.2, random_state=42,stratify=df['label']
 )
 
 tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
@@ -327,4 +328,4 @@ plt.tight_layout()
 plt.savefig('dp_training_roberta_detailed_metrics.png')
 plt.show()
 
-torch.save(model.state_dict(), 'roberta_lora_privacy.pt')
+torch.save(model.state_dict(), 'roberta_lora_w_o_privacy.pt')
