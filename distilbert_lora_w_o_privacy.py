@@ -276,5 +276,5 @@ print(f'  Train Loss: {np.mean(train_losses):.4f}')
 print(f'  Test Accuracy: {test_accuracy:.4f}')
 print(classification_report(test_true, test_preds))
 
-torch.save(model.state_dict(), 'distilbert_lora.pt')
+torch.save(model.state_dict(), 'distilbert_lora_w_o_privacy.pt')
 
